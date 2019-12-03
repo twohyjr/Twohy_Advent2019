@@ -137,6 +137,5 @@ int main(int argc, const char * argv[]) {
     
     std::cout << "The closest intersection of wires to the origin is: " << closestPoint << std::endl;
     
-    // Answer -- the closest intersection of wires to the origin is: 221
     return 0;
 }
