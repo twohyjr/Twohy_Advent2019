@@ -114,13 +114,13 @@ void printSolution(std::vector<int> &opcodes, int iterationIncrement) {
     std::cout << "The final answer is: " << finalValue << std::endl;
     std::cout << "It took " << iterationCount << " iteration(s) using " << iterationIncrement << "!" << std::endl;
     if(iterationCount > 1) {
-        std::cout << "You should the increase iteration increment to " << iterationIncrement * iterationCount + iterationIncrement << " for faster results" << std::endl;
+        std::cout << "You should the increase iteration increment to " << iterationIncrement * iterationCount << " for faster results" << std::endl;
     }
 }
 
 int main() {
     // increase / decrease this value if you cannot find the value fast enough
-    int iterationIncrement = 91;
+    int iterationIncrement = 90;
 
     auto opcodes = readComputerProgramOpcodes("Dec2/input");
     printSolution(opcodes, iterationIncrement);
