@@ -112,7 +112,7 @@ void printSolution(std::vector<int> &opcodes, int iterationIncrement) {
         iterationCount += 1;
     }
     std::cout << "The final answer is: " << finalValue << std::endl;
-    std::cout << "It took " << iterationCount << " iteration(s) using " << iterationCount << "!" << std::endl;
+    std::cout << "It took " << iterationCount << " iteration(s) using " << iterationIncrement << "!" << std::endl;
     if(iterationCount > 1) {
         std::cout << "You should the increase iteration increment to " << iterationIncrement * iterationCount + iterationIncrement << " for faster results" << std::endl;
     }
@@ -125,5 +125,10 @@ int main() {
     auto opcodes = readComputerProgramOpcodes("Dec2/input");
     printSolution(opcodes, iterationIncrement);
     
+    // The noun is: 89
+    // The verb is: 76
+    // The final answer is: 8976
+    // It took 1 iteration(s) using 91!
+    
     return 0;
-} 
+}
