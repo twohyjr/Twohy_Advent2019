@@ -126,15 +126,4 @@ int main() {
     printSolution(opcodes, iterationIncrement);
     
     return 0;
-}
-
-// Opcodes - read positioins
-//       1    -   Adds together numbers read from two positions and stores
-//                the result in a third position
-//
-//       2    -   works exactly like opcode 1, except it multiplies the
-//                two inputs instead of adding them
-//
-//      99    -  program is finished and should immediately halt.
-//
-// Unknown    -  something went wrong
+} 
