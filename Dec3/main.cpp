@@ -16,6 +16,7 @@ struct Wire {
 struct Point {
     int x;
     int y;
+    int totalSteps;
     
     Point operator +(Point const &p) {
         return {this->x + p.x, this->y + p.y};
@@ -54,13 +55,16 @@ std::vector<Wire> getCircuitWires(std::string filepath) {
 }
 
 // Origin = 0,0
-std::map<std::string, bool> getPointsTheWireTouched(std::vector<Direction> wireDirections) {
-    std::map<std::string, bool> points;
+std::map<std::string, int> getPointsTheWireTouched(std::vector<Direction> wireDirections) {
+    std::map<std::string, int> points;
     Point lastP = {0,0};
+    
+    int totalSteps = 0;
     for(auto direction : wireDirections) {
-        
         int stepsToTake = direction.steps;
         while (stepsToTake > 0) {
+            totalSteps += 1;
+            
             Point thisP = lastP;
             if(direction.direction == "L") { thisP.x -= 1; }
             if(direction.direction == "R") { thisP.x += 1; }
@@ -68,7 +72,11 @@ std::map<std::string, bool> getPointsTheWireTouched(std::vector<Direction> wireD
             if(direction.direction == "U") { thisP.y += 1; }
             
             std::string key = std::to_string(thisP.x) + " , " + std::to_string(thisP.y);
-            points[key] = true;
+            
+            if(points[key] == 0) {
+                points[key] = totalSteps;
+            }
+            
             lastP = thisP;
             
             stepsToTake -= 1;
@@ -77,13 +85,17 @@ std::map<std::string, bool> getPointsTheWireTouched(std::vector<Direction> wireD
     return points;
 }
     
-std::vector<Point> getIntersectPoints(std::map<std::string, bool> pointsTouchedMap, std::vector<Direction> wireDirections) {
+std::vector<Point> getIntersectPoints(std::map<std::string, int> pointsTouchedMap, std::vector<Direction> wireDirections) {
     std::vector<Point> points;
     Point lastP = {0,0};
+    
+    int totalSteps = 0;
     for(auto direction : wireDirections) {
         
         int stepsToTake = direction.steps;
         while (stepsToTake > 0) {
+            totalSteps += 1;
+            
             Point thisP = lastP;
             if(direction.direction == "L") { thisP.x -= 1; }
             if(direction.direction == "R") { thisP.x += 1; }
@@ -91,7 +103,8 @@ std::vector<Point> getIntersectPoints(std::map<std::string, bool> pointsTouchedM
             if(direction.direction == "U") { thisP.y += 1; }
             
             std::string key = std::to_string(thisP.x) + " , " + std::to_string(thisP.y);
-            if(pointsTouchedMap[key] == true) {
+            if(pointsTouchedMap[key] > 0) {
+                thisP.totalSteps = totalSteps + pointsTouchedMap[key];
                 points.push_back(thisP);
             }
             lastP = thisP;
@@ -127,6 +140,7 @@ int main(int argc, const char * argv[]) {
     auto pointsTouchedMap = getPointsTheWireTouched(wire1.directions);
     auto intersectionPoints = getIntersectPoints(pointsTouchedMap, wire2.directions);
     
+    // Part 1
     int closestPoint = INT_MAX;
     for(auto point : intersectionPoints) {
         int mDist = getManhattanDistance(point, {0,0});
@@ -134,8 +148,16 @@ int main(int argc, const char * argv[]) {
             closestPoint = mDist;
         }
     }
-    
     std::cout << "The closest intersection of wires to the origin is: " << closestPoint << std::endl;
+    
+    // Part 2
+    int leastAmountOfSteps = INT_MAX;
+    for(auto point : intersectionPoints) {
+        if(point.totalSteps < leastAmountOfSteps) {
+            leastAmountOfSteps = point.totalSteps;
+        }
+    }
+    std::cout << "The least amount of steps taken was: " << leastAmountOfSteps << std::endl;
     
     return 0;
 }
