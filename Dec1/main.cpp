@@ -21,10 +21,12 @@ std::vector<int> getMassValuesFromInputFile(std::string filepath) {
     return massValues;
 }
 
+// Part 1
 int calculateFuel(int massValue) {
     return (massValue / 3) - 2;
 }
 
+// Part 2
 int calculateFuelRecursive(int massValue, int total) {
     int newFuelLevel = (massValue / 3) - 2;
     if(newFuelLevel <= 0) {
