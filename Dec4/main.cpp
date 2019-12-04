@@ -177,7 +177,7 @@ int main(int argc, const char * argv[]) {
         }
     }
     // Answer -- 1246
-    std::cout << "Part 1: The number of valid passwords that exist is: " << validPasswordsPart2.size() << std::endl;
+    std::cout << "Part 2: The number of valid passwords that exist without triples is: " << validPasswordsPart2.size() << std::endl;
 //    runPart2Tests();
     
     return 0;
