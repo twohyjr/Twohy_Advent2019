@@ -54,7 +54,6 @@ std::vector<Wire> getCircuitWires(std::string filepath) {
     return wires;
 }
 
-// Origin = 0,0
 std::map<std::string, int> getPointsTheWireTouched(std::vector<Direction> wireDirections) {
     std::map<std::string, int> points;
     Point lastP = {0,0};
