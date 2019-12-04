@@ -23,13 +23,24 @@ std::vector<int> getMassValuesFromInputFile(std::string filepath) {
     return massValues;
 }
 
+int calculateFuel(int massValue, int total) {
+    int newFuelLevel = (massValue / 3) - 2;
+    if(newFuelLevel <= 0) {
+        return total;
+    }
+    
+
+    total += newFuelLevel;
+
+    return calculateFuel(newFuelLevel, total);
+}
 
 int main(int argc, const char * argv[]) {
     auto massValues = getMassValuesFromInputFile("Dec1/input");
     
     int total = 0;
     for(int massValue : massValues) {
-        total += (massValue / 3) - 2;
+        total += calculateFuel(massValue, 0);
     }
     
     std::cout << "The total fuel necessary is: " << total << std::endl;
