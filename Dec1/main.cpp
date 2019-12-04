@@ -35,7 +35,7 @@ int calculateFuelRecursive(int massValue, int total) {
 }
 
 int main(int argc, const char * argv[]) {
-    auto massValues = getMassValuesFromInputFile("Dec1/input");
+    auto massValues = getMassValuesFromInputFile("Dec1_input");
     
     // Part 1
     int total = 0;

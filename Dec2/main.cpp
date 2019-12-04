@@ -122,7 +122,7 @@ int main() {
     // increase / decrease this value if you cannot find the value fast enough
     int iterationIncrement = 90;
 
-    auto opcodes = readComputerProgramOpcodes("Dec2/input");
+    auto opcodes = readComputerProgramOpcodes("Dec2_input");
     printSolution(opcodes, iterationIncrement);
     
     // The noun is: 89

@@ -131,7 +131,7 @@ int getClosestManhattanDistance(std::vector<Point> crossedPoints) {
 }
 
 int main(int argc, const char * argv[]) {
-    auto wires = getCircuitWires("Dec3/input");
+    auto wires = getCircuitWires("Dec3_input");
     
     auto wire1 = wires[0];
     auto wire2 = wires[1];
