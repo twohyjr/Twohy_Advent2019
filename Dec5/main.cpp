@@ -38,39 +38,6 @@ std::vector<int> readComputerProgramOpcodes(std::string filepath) {
     return massValues;
 }
 
-void processOpcode1(std::vector<int> &opcodes,
-                    OpcodeProgram program,
-                    int param1,
-                    int param2,
-                    int param3) {
-    int value1 = program.param1InputMode == InputModes::POSITION ? opcodes[param1] : param1;
-    int value2 = program.param2InputMode == InputModes::POSITION ? opcodes[param2] : param2;
-    opcodes[param3] = value1 + value2;
-}
-
-void processOpcode2(std::vector<int> &opcodes,
-                    OpcodeProgram program,
-                    int param1,
-                    int param2,
-                    int param3) {
-    int value1 = program.param1InputMode == InputModes::POSITION ? opcodes[param1] : param1;
-    int value2 = program.param2InputMode == InputModes::POSITION ? opcodes[param2] : param2;
-    opcodes[param3] = value1 * value2;
-}
-
-// Write value to index
-void processOpcode3(std::vector<int> &opcodes,
-                    int value,
-                    int writeIndex) {
-    opcodes[writeIndex] = value;
-}
-
-// Returns output at address
-int processOpcode4(std::vector<int> const &opcodes,
-                   int address) {
-    return opcodes[address];
-}
-
 void padWithZeros(std::string &value, int desiredLength) {
     while(value.size() < desiredLength) {
         value.insert(0, "0"); // add zero to beginning
@@ -108,45 +75,77 @@ OpcodeProgram getOpcodeProgram(int programInstruction) {
     };
 }
 
+
+void processOpcode1(std::vector<int> &opcodes,
+                    OpcodeProgram program,
+                    int param1,
+                    int param2,
+                    int param3) {
+    int value1 = program.param1InputMode == InputModes::POSITION ? opcodes[param1] : param1;
+    int value2 = program.param2InputMode == InputModes::POSITION ? opcodes[param2] : param2;
+    opcodes[param3] = value1 + value2;
+}
+
+void processOpcode2(std::vector<int> &opcodes,
+                    OpcodeProgram program,
+                    int param1,
+                    int param2,
+                    int param3) {
+    int value1 = program.param1InputMode == InputModes::POSITION ? opcodes[param1] : param1;
+    int value2 = program.param2InputMode == InputModes::POSITION ? opcodes[param2] : param2;
+    opcodes[param3] = value1 * value2;
+}
+
+// Write value to index
+void processOpcode3(std::vector<int> &opcodes,
+                    int value,
+                    int writeIndex) {
+    opcodes[writeIndex] = value;
+}
+
+// Returns output at address
+int processOpcode4(std::vector<int> const &opcodes,
+                   int address) {
+    return opcodes[address];
+}
+
 // Executes the opcodes program
 int runProgram(std::vector<int> &opcodes, int id) {
     std::vector<int> outputs;
 
-    int currentIndex = 0;
+    int instructionPointer = 0;
     bool programIsTerminated = false;
-    
     while(!programIsTerminated) {
-        if(currentIndex == opcodes.size() - 1) {
+        if(instructionPointer == opcodes.size() - 1) {
             programIsTerminated = true;
         }
         
-        OpcodeProgram program = getOpcodeProgram(opcodes[currentIndex]);
+        OpcodeProgram program = getOpcodeProgram(opcodes[instructionPointer]);
         int opcode = program.opcode;
-        
         switch (opcode) {
             case 1:
                 processOpcode1(opcodes,
                                program,
-                               opcodes[currentIndex + 1],
-                               opcodes[currentIndex + 2],
-                               opcodes[currentIndex + 3]);
-                currentIndex += 4;
+                               opcodes[instructionPointer + 1],
+                               opcodes[instructionPointer + 2],
+                               opcodes[instructionPointer + 3]);
+                instructionPointer += 4;
                 break;
             case 2:
                 processOpcode2(opcodes,
                                program,
-                               opcodes[currentIndex + 1],
-                               opcodes[currentIndex + 2],
-                               opcodes[currentIndex + 3]);
-                currentIndex += 4;
+                               opcodes[instructionPointer + 1],
+                               opcodes[instructionPointer + 2],
+                               opcodes[instructionPointer + 3]);
+                instructionPointer += 4;
                 break;
             case 3:
-                opcodes[opcodes[currentIndex + 1]] = id;
-                currentIndex += 2;
+                opcodes[opcodes[instructionPointer + 1]] = id;
+                instructionPointer += 2;
                 break;
             case 4:
-                outputs.push_back(processOpcode4(opcodes, opcodes[currentIndex + 1]));
-                currentIndex += 2;
+                outputs.push_back(processOpcode4(opcodes, opcodes[instructionPointer + 1]));
+                instructionPointer += 2;
                 break;
             case 99:
                 programIsTerminated = true;
@@ -174,8 +173,8 @@ int main(int argc, const char * argv[]) {
     
     // Part 1
     int programOutput1 = runProgram(opcodes, 1);
-    // Answer -- 15386262
     std::cout << "The final program output is: " << programOutput1 << std::endl;
+    // Answer -- 15386262
 
     return 0;
 }
