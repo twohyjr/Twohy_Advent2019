@@ -109,13 +109,12 @@ OpcodeProgram getOpcodeProgram(int programInstruction) {
 }
 
 // Executes the opcodes program
-int runProgram(std::vector<int> &opcodes) {
+int runProgram(std::vector<int> &opcodes, int id) {
     std::vector<int> outputs;
 
     int currentIndex = 0;
     bool programIsTerminated = false;
     
-    int defaultInput = 1;
     while(!programIsTerminated) {
         if(currentIndex == opcodes.size() - 1) {
             programIsTerminated = true;
@@ -142,7 +141,7 @@ int runProgram(std::vector<int> &opcodes) {
                 currentIndex += 4;
                 break;
             case 3:
-                opcodes[opcodes[currentIndex + 1]] = defaultInput;
+                opcodes[opcodes[currentIndex + 1]] = id;
                 currentIndex += 2;
                 break;
             case 4:
@@ -174,9 +173,9 @@ int main(int argc, const char * argv[]) {
     auto opcodes = readComputerProgramOpcodes("Dec5_input");
     
     // Part 1
-    int programOutput = runProgram(opcodes);
+    int programOutput1 = runProgram(opcodes, 1);
     // Answer -- 15386262
-    std::cout << "The final program output is: " << programOutput << std::endl;
+    std::cout << "The final program output is: " << programOutput1 << std::endl;
 
     return 0;
 }
