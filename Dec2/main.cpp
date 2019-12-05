@@ -28,8 +28,6 @@ std::vector<int> readComputerProgramOpcodes(std::string filepath) {
 }
 
 int intCodeProgramFirstValue(std::vector<int> opcodes, int noun, int verb) {
-    bool programIsTerminated = false;
-    
     int replaceIndex1Value = noun;
     int replaceIndex2Value = verb;
     
@@ -37,6 +35,7 @@ int intCodeProgramFirstValue(std::vector<int> opcodes, int noun, int verb) {
     opcodes[2] = replaceIndex2Value;
     
     int currentIndex = 0;
+    bool programIsTerminated = false;
     while(!programIsTerminated) {
         if(currentIndex == opcodes.size() - 1) {
             programIsTerminated = true;
