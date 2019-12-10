@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "permutation_util.hpp"
+
 enum InputModes {
     POSITION, // read by index
     IMMEDIATE // read by value
@@ -193,8 +195,10 @@ void procesOpcode8(std::vector<int> &opcodes,
 }
 
 // Executes the opcodes program based on the given id
-int runProgram(std::vector<int> opcodes, int id) {
-    int output;
+int runProgram(std::vector<int> opcodes, int phaseSetting, int inputSignal) {
+    int output = 0;
+    
+    int currentPass = 0;
 
     int instructionPointer = 0;
     bool programIsTerminated = false;
@@ -224,11 +228,15 @@ int runProgram(std::vector<int> opcodes, int id) {
                 instructionPointer += 4;
                 break;
             case 3:
-                processOpcode3(opcodes,
-                               program,
-                               opcodes[instructionPointer + 1],
-                               id);
-                instructionPointer += 2;
+                {
+                    int id = currentPass == 0 ? phaseSetting : inputSignal;
+                    processOpcode3(opcodes,
+                                   program,
+                                   opcodes[instructionPointer + 1],
+                                   id);
+                    instructionPointer += 2;
+                    currentPass += 1;
+                }
                 break;
             case 4:
                 processOpcode4(opcodes,
@@ -279,18 +287,67 @@ int runProgram(std::vector<int> opcodes, int id) {
     return output;
 }
 
+void calculatePart1(std::vector<int> opcodes) {
+    auto allPermutations = getAllPermutations("01234");
+    
+    std::vector<int> largestSignalSequence;
+    int largestSignal = 0;
+    for(auto sequence : allPermutations) {
+        int inputSignal = 0;
+        for(int phaseSetting : sequence) {
+            inputSignal = runProgram(opcodes, phaseSetting, inputSignal);
+        }
+        if(inputSignal > largestSignal) {
+            largestSignal = inputSignal;
+            largestSignalSequence = sequence;
+        }
+    }
+    std::string sequence = "";
+    for(int val : largestSignalSequence) {
+        sequence += std::to_string(val);
+    }
+    std::cout << "Part 1: The largest signal is " << largestSignal << " and it comes from the sequence " << sequence << std::endl;
+}
+
+void calculatePart2(std::vector<int> opcodes) {
+    std::vector<int> sequence = { 9,7,8,5,6 };
+    int running = true;
+    int largestValue = 0;
+    int inputSignal = 0;
+    int passCount = 1;
+    while(running) {
+        std::cout << "----Starting Pass " << passCount << "-----" << std::endl;
+        int amplifierNumber = 1;
+        for(int phaseSetting : sequence) {
+            std::cout << "Sending Signal " << inputSignal << " to Amplifier " << amplifierNumber << std::endl;;
+            inputSignal = runProgram(opcodes, phaseSetting, inputSignal);
+            
+            if(inputSignal < 0) {
+                running = false;
+                break;
+            }
+            std::cout << "Amplifier " << amplifierNumber << " returned value " << inputSignal << std::endl;
+            amplifierNumber += 1;
+            std::cout << std::endl;
+        }
+        if(running) {
+            largestValue = inputSignal;
+        }
+        std::cout << "----Ending Pass " << passCount << "-----" << std::endl;
+        passCount += 1;
+        std::cout << std::endl;
+    }
+    
+    std::cout << largestValue << std::endl;
+}
+
 int main(int argc, const char * argv[]) {
+    auto opcodes = readComputerProgramOpcodes("Dec7_input");
     
-    // Part 1
-    auto opcodes = readComputerProgramOpcodes("Dec5_input");
-    int programOutput1 = runProgram(opcodes, 1);
-    std::cout << "Part 1: The final program output is: " << programOutput1 << std::endl;
-    // Answer -- 15386262
     
-    // Part 2
-    int programOutput2 = runProgram(opcodes, 5);
-    std::cout << "Part 2: The final program output is: " << programOutput2 << std::endl;
-    // Answer -- 10376124
+    
+//    calculatePart1(opcodes);
+    calculatePart2(opcodes);
     
     return 0;
 }
