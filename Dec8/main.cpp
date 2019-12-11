@@ -103,11 +103,6 @@ void runPart2(std::vector<int> pixelData) {
                 if(newLayerValue == 1 && currentLayerValue == 2) {
                     currentPicture[currentLayerIndex] = 1;
                 }
-                
-                // new layer transparent
-                if(newLayerValue == 2) {
-                    
-                }
             }
         }
     }
